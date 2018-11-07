@@ -1,12 +1,14 @@
 package hangman.server.model;
 
+import hangman.common.Message;
+import hangman.common.MessageType;
 import hangman.file.WordPicker;
 
 public class Game {
     private String currentWord;
     private String guessedWordSoFar;
     private int attemptsLeft;
-    private Outcome outcome;
+    private MessageType outcome;
     private WordPicker wordPicker = new WordPicker();
 
     public void init() {
@@ -14,7 +16,7 @@ public class Game {
         int wordLen = currentWord.length();
         guessedWordSoFar = generateHiddenWord(wordLen);
         attemptsLeft = wordLen;
-        outcome = Outcome.IN_PROGRESS;
+        outcome = MessageType.IN_PROGRESS;
     }
 
     private String chooseWord() {
@@ -65,20 +67,13 @@ public class Game {
 
     private void checkStatus() {
         if (attemptsLeft == 0)
-            outcome = Outcome.LOST;
+            outcome = MessageType.LOST;
         else if (currentWord.equals(guessedWordSoFar))
-            outcome = Outcome.WON;
+            outcome = MessageType.WON;
     }
 
-    public String getStatus() {
-        String result = outcome.toString() + " " + guessedWordSoFar + " " + attemptsLeft;
-        return result;
-    }
-
-    private enum Outcome {
-        IN_PROGRESS,
-        WON,
-        LOST
+    public Message getStatus() {
+        return new Message(outcome, guessedWordSoFar, attemptsLeft);
     }
 
 }

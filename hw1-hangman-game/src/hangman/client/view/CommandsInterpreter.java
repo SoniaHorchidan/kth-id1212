@@ -2,10 +2,12 @@ package hangman.client.view;
 
 import hangman.client.controller.Controller;
 import hangman.client.net.OutputHandler;
+import hangman.common.Message;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 
@@ -76,6 +78,25 @@ public class CommandsInterpreter {
     private void playAgain() {
         controller.startGame();
         buttonsPane.setDisable(false);
+        messagesText.setText("");
+    }
+
+    @FXML
+    private void enterGuessedLetter(KeyEvent e) {
+        if (e.getCode().toString().equals("ENTER"))
+            guessLetter();
+    }
+
+    @FXML
+    private void enterGuessedWord(KeyEvent e) {
+        if (e.getCode().toString().equals("ENTER"))
+            guessWholeWord();
+    }
+
+    @FXML
+    private void enterToRestart(KeyEvent e) {
+        if (e.getCode().toString().equals("ENTER"))
+            playAgain();
     }
 
     private void clearFields() {
@@ -94,25 +115,28 @@ public class CommandsInterpreter {
 
     private class UIOutput implements OutputHandler {
         @Override
-        public void handleMessage(String msg) {
+        public void handleMessage(Message msg) {
             Platform.runLater(() -> {
-                String[] elements = msg.split(" ");
-                switch (elements[0]) {
-                    case "WON": {
+                switch (msg.getType()) {
+                    case WON: {
                         endGame("You won!");
                         break;
                     }
-                    case "LOST": {
+                    case LOST: {
                         endGame("You lost. Try again!");
                         break;
                     }
+                    case IN_PROGRESS: {
+                        break;
+                    }
                     default: {
+                        messagesText.setText("Unknown command");
                         break;
                     }
                 }
-                wordToGuess.setText(elements[1]);
-                attempts.setText(elements[2]);
-                score.setText(elements[3]);
+                wordToGuess.setText(msg.getWord());
+                attempts.setText(String.valueOf(msg.getAttempts()));
+                score.setText(String.valueOf(msg.getScore()));
             });
         }
     }

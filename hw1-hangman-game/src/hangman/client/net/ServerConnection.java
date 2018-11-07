@@ -1,9 +1,11 @@
 package hangman.client.net;
 
-import java.io.BufferedReader;
+import hangman.common.Message;
+import hangman.common.MessageType;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
@@ -11,8 +13,8 @@ public class ServerConnection {
     private static final int TIMEOUT_HALF_HOUR = 1800000;
     private static final int TIMEOUT_HALF_MINUTE = 30000;
     private Socket socket;
-    private PrintWriter toServer;
-    private BufferedReader fromServer;
+    private ObjectOutputStream toServer;
+    private ObjectInputStream fromServer;
     private volatile boolean connected;
 
     public void connect(String host, int port, OutputHandler handler) throws IOException {
@@ -20,11 +22,9 @@ public class ServerConnection {
         socket.connect(new InetSocketAddress(host, port), TIMEOUT_HALF_MINUTE);
         socket.setSoTimeout(TIMEOUT_HALF_HOUR);
         connected = true;
-        boolean autoFlush = true;
-        toServer = new PrintWriter(socket.getOutputStream(), autoFlush);
-        fromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        toServer = new ObjectOutputStream(socket.getOutputStream());
+        fromServer = new ObjectInputStream(socket.getInputStream());
         new Thread(new Listener(handler)).start();
-
     }
 
     public void disconnect() throws IOException {
@@ -34,24 +34,30 @@ public class ServerConnection {
     }
 
     public void startGame() {
-        sendMessage("start");
+        sendMessage(new Message(MessageType.START));
     }
 
     public void guessLetter(String letter) {
-        sendMessage("letter " + letter);
+        sendMessage(new Message(MessageType.LETTER, letter));
     }
 
     public void guessWord(String word) {
-        sendMessage("word " + word);
+        sendMessage(new Message(MessageType.WORD, word));
     }
 
-    private void sendMessage(String msg) {
-        toServer.println(msg);
-        toServer.flush();
+    private void sendMessage(Message msg) {
+        try {
+            toServer.writeObject(msg);
+            toServer.flush();
+            toServer.reset();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public class Listener implements Runnable {
         private final OutputHandler outputHandler;
+
         public Listener(OutputHandler outputHandler) {
             this.outputHandler = outputHandler;
         }
@@ -60,11 +66,11 @@ public class ServerConnection {
         public void run() {
             try {
                 while (true) {
-                    outputHandler.handleMessage(fromServer.readLine());
+                    outputHandler.handleMessage((Message) fromServer.readObject());
                 }
             } catch (Throwable connectionFailure) {
                 if (connected) {
-                    outputHandler.handleMessage("Lost connection.");
+                    outputHandler.handleMessage(new Message(MessageType.INFORM, "Lost connection."));
                 }
             }
         }

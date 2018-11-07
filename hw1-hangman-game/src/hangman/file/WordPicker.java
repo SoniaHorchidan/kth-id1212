@@ -22,15 +22,16 @@ public class WordPicker {
         Random random = new Random();
         try {
             int position = random.nextInt((int) file.length());
-            file.seek(position);
+            while (position >= 0 && ((char) file.readByte() != '\n')) {
+                file.seek(position);
+                position--;
+            }
             String word = file.readLine();
-            System.out.println(word);
+            System.out.println("Selected word:" + word);
             return word;
         } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
     }
-
-
 }

@@ -1,98 +1,111 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
-
-<AnchorPane prefHeight="700.0" prefWidth="900.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hangman.client.view.CommandsInterpreter">
+<?import javafx.scene.text.*?>
+<AnchorPane prefHeight="700.0" prefWidth="900.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="hangman.client.view.CommandsInterpreter">
     <children>
         <GridPane fx:id="appPane" layoutX="14.0" layoutY="-7.0" prefHeight="700.0" prefWidth="900.0" visible="false">
             <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="689.0" minWidth="10.0" prefWidth="605.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="445.0" minWidth="10.0" prefWidth="295.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="689.0" minWidth="10.0" prefWidth="605.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="445.0" minWidth="10.0" prefWidth="295.0"/>
             </columnConstraints>
             <rowConstraints>
-                <RowConstraints maxHeight="247.0" minHeight="0.0" prefHeight="112.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="650.0" minHeight="10.0" prefHeight="501.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="603.0" minHeight="10.0" prefHeight="88.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="247.0" minHeight="0.0" prefHeight="112.0" vgrow="SOMETIMES"/>
+                <RowConstraints maxHeight="650.0" minHeight="10.0" prefHeight="501.0" vgrow="SOMETIMES"/>
+                <RowConstraints maxHeight="603.0" minHeight="10.0" prefHeight="88.0" vgrow="SOMETIMES"/>
             </rowConstraints>
             <children>
-                <AnchorPane fx:id="buttonsPane" prefHeight="501.0" prefWidth="532.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <AnchorPane fx:id="buttonsPane" prefHeight="501.0" prefWidth="532.0" GridPane.columnIndex="1"
+                            GridPane.rowIndex="1">
                     <children>
-                        <Button layoutY="368.0" mnemonicParsing="false" onAction="#guessWholeWord" prefHeight="31.0" prefWidth="225.0" text="Guess whole word" />
-                        <Button layoutY="177.0" mnemonicParsing="false" onAction="#guessLetter" prefHeight="31.0" prefWidth="225.0" text="Guess letter" />
-                        <TextField fx:id="letterProposed" layoutY="108.0" prefHeight="31.0" prefWidth="225.0" />
-                        <TextField fx:id="wordProposed" layoutY="302.0" prefHeight="31.0" prefWidth="225.0" />
+                        <Button layoutY="368.0" mnemonicParsing="false" onAction="#guessWholeWord" prefHeight="31.0"
+                                prefWidth="225.0" text="Guess whole word"/>
+                        <Button layoutY="177.0" mnemonicParsing="false" onAction="#guessLetter" prefHeight="31.0"
+                                prefWidth="225.0" text="Guess letter"/>
+                        <TextField fx:id="letterProposed" layoutY="108.0" onKeyPressed="#enterGuessedLetter"
+                                   prefHeight="31.0" prefWidth="225.0"/>
+                        <TextField fx:id="wordProposed" layoutY="302.0" onKeyPressed="#enterGuessedWord"
+                                   prefHeight="31.0" prefWidth="225.0"/>
                     </children>
                 </AnchorPane>
                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                     <children>
-                        <Text layoutX="14.0" layoutY="62.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Attempts left:">
-                     <font>
-                        <Font size="18.0" />
-                     </font></Text>
+                        <Text layoutX="14.0" layoutY="62.0" strokeType="OUTSIDE" strokeWidth="0.0"
+                              text="Attempts left:">
+                            <font>
+                                <Font size="18.0"/>
+                            </font>
+                        </Text>
                         <Label fx:id="attempts" layoutX="138.0" layoutY="42.0" text="Label">
-                     <font>
-                        <Font size="18.0" />
-                     </font></Label>
+                            <font>
+                                <Font size="18.0"/>
+                            </font>
+                        </Label>
                     </children>
                 </AnchorPane>
                 <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
                     <children>
-                        <Text layoutX="14.0" layoutY="62.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Overall score:">
-                     <font>
-                        <Font size="18.0" />
-                     </font></Text>
+                        <Text layoutX="14.0" layoutY="62.0" strokeType="OUTSIDE" strokeWidth="0.0"
+                              text="Overall score:">
+                            <font>
+                                <Font size="18.0"/>
+                            </font>
+                        </Text>
                         <Label fx:id="score" layoutX="138.0" layoutY="42.0" text="Label">
-                     <font>
-                        <Font size="18.0" />
-                     </font></Label>
+                            <font>
+                                <Font size="18.0"/>
+                            </font>
+                        </Label>
                     </children>
                 </AnchorPane>
                 <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                     <children>
-                        <Button layoutY="14.0" mnemonicParsing="false" onAction="#playAgain" prefHeight="31.0" prefWidth="225.0" text="Play again" />
+                        <Button layoutY="14.0" mnemonicParsing="false" onAction="#playAgain"
+                                onKeyPressed="#enterToRestart" prefHeight="31.0" prefWidth="225.0" text="Play again"/>
                     </children>
                 </AnchorPane>
-            <AnchorPane prefHeight="515.0" prefWidth="653.0" GridPane.rowIndex="1">
-               <children>
-                  <Label fx:id="wordToGuess" alignment="CENTER" contentDisplay="CENTER" layoutX="33.0" layoutY="365.0" prefHeight="116.0" prefWidth="532.0" text="Label">
-                     <font>
-                        <Font name="Algerian" size="74.0" />
-                     </font>
-                  </Label>
-                  <ImageView fitHeight="314.0" fitWidth="225.0" layoutX="175.0" layoutY="42.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@hang.jpg" />
-                     </image>
-                  </ImageView>
-               </children>
-            </AnchorPane>
-            <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2">
-               <children>
-                  <Label fx:id="messagesText" layoutX="64.0" layoutY="14.0" prefHeight="35.0" prefWidth="504.0" text="Label" textFill="#e80000" visible="false">
-                     <font>
-                        <Font size="24.0" />
-                     </font>
-                  </Label>
-               </children>
-            </AnchorPane>
+                <AnchorPane prefHeight="515.0" prefWidth="653.0" GridPane.rowIndex="1">
+                    <children>
+                        <Label fx:id="wordToGuess" alignment="CENTER" contentDisplay="CENTER" layoutX="33.0"
+                               layoutY="365.0" prefHeight="116.0" prefWidth="532.0" text="Label">
+                            <font>
+                                <Font name="Algerian" size="74.0"/>
+                            </font>
+                        </Label>
+                        <ImageView fitHeight="314.0" fitWidth="225.0" layoutX="175.0" layoutY="42.0" pickOnBounds="true"
+                                   preserveRatio="true">
+                            <image>
+                                <Image url="@hang.jpg"/>
+                            </image>
+                        </ImageView>
+                    </children>
+                </AnchorPane>
+                <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2">
+                    <children>
+                        <Label fx:id="messagesText" layoutX="64.0" layoutY="14.0" prefHeight="35.0" prefWidth="504.0"
+                               text="Label" textFill="#e80000" visible="false">
+                            <font>
+                                <Font size="24.0"/>
+                            </font>
+                        </Label>
+                    </children>
+                </AnchorPane>
             </children>
         </GridPane>
         <AnchorPane fx:id="startPane" prefHeight="700.0" prefWidth="914.0" style="-fx-background-color: white;">
             <children>
-            <ImageView fitHeight="504.0" fitWidth="679.0" layoutX="118.0" layoutY="78.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@Hangman.jpg" />
-               </image>
-            </ImageView>
-                <Button layoutX="329.0" layoutY="588.0" mnemonicParsing="false" onAction="#startGame" prefHeight="49.0" prefWidth="256.0" text="Play" />
+                <ImageView fitHeight="504.0" fitWidth="679.0" layoutX="118.0" layoutY="78.0" pickOnBounds="true"
+                           preserveRatio="true">
+                    <image>
+                        <Image url="@Hangman.jpg"/>
+                    </image>
+                </ImageView>
+                <Button layoutX="329.0" layoutY="588.0" mnemonicParsing="false" onAction="#startGame" prefHeight="49.0"
+                        prefWidth="256.0" text="Play"/>
             </children>
         </AnchorPane>
     </children>

@@ -35,10 +35,10 @@ public class Controller {
     }
 
     public void guessLetter(String letter) {
-        serverConnection.guessLetter(letter);
+        CompletableFuture.runAsync(() -> serverConnection.guessLetter(letter));
     }
 
     public void guessWord(String word) {
-        serverConnection.guessWord(word);
+        CompletableFuture.runAsync(() -> serverConnection.guessWord(word));
     }
 }

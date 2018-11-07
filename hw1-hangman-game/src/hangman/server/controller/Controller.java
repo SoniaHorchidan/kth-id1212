@@ -1,43 +1,44 @@
 package hangman.server.controller;
 
+import hangman.common.Message;
+import hangman.common.MessageType;
 import hangman.server.model.Game;
 
 public class Controller {
     private Game game = new Game();
     private int overAllScore = 0;
 
-    public String parseInput(String clientInput) {
-        if (clientInput.equals("start"))
-            game.init();
-        else {
-            String[] input = clientInput.split(" ");
-            switch (input[0]) {
-                case "word": {
-                    game.checkWord(input[1]);
-                    break;
-                }
-                case "letter": {
-                    game.checkLetter(input[1].charAt(0));
-                    break;
-                }
-                default: {
-                    return "Unknown command";
-                }
+    public Message parseInput(Message clientInput) {
+        MessageType messageType = clientInput.getType();
+        switch (messageType) {
+            case START: {
+                game.init();
+                break;
+            }
+            case WORD: {
+                game.checkWord(clientInput.getWord());
+                break;
+            }
+            case LETTER: {
+                game.checkLetter(clientInput.getWord().charAt(0));
+                break;
+            }
+            default: {
+                return new Message(MessageType.INFORM, "Unknown command");
             }
         }
         return getUpdatedStatus();
     }
 
-    private String getUpdatedStatus() {
-        String result = "";
-        String gameStatus = game.getStatus();
-        String[] elems = gameStatus.split(" ");
-        switch (elems[0]) {
-            case "WON": {
+    private Message getUpdatedStatus() {
+        Message gameStatus = game.getStatus();
+        MessageType type = gameStatus.getType();
+        switch (type) {
+            case WON: {
                 overAllScore++;
                 break;
             }
-            case "LOST": {
+            case LOST: {
                 overAllScore--;
                 break;
             }
@@ -45,8 +46,7 @@ public class Controller {
                 break;
             }
         }
-
-        result = gameStatus + " " + overAllScore;
-        return result;
+        gameStatus.setScore(overAllScore);
+        return gameStatus;
     }
 }

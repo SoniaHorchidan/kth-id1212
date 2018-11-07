@@ -1,5 +1,7 @@
 package hangman.client.net;
 
+import hangman.common.Message;
+
 public interface OutputHandler {
-    void handleMessage(String msg);
+    void handleMessage(Message msg);
 }

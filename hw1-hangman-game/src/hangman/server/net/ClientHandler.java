@@ -1,5 +1,6 @@
 package hangman.server.net;
 
+import hangman.common.Message;
 import hangman.server.controller.Controller;
 
 import java.io.*;
@@ -8,8 +9,8 @@ import java.net.Socket;
 public class ClientHandler implements Runnable {
     private Socket clientSocket;
     private boolean connected;
-    private BufferedReader fromClient;
-    private PrintWriter toClient;
+    private ObjectInputStream fromClient;
+    private ObjectOutputStream toClient;
     private Controller controller;
 
     public ClientHandler(Socket clientSocket) {
@@ -21,25 +22,27 @@ public class ClientHandler implements Runnable {
     @Override
     public void run() {
         try {
-            fromClient = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            toClient = new PrintWriter(clientSocket.getOutputStream());
+            toClient = new ObjectOutputStream(clientSocket.getOutputStream());
+            fromClient = new ObjectInputStream(clientSocket.getInputStream());
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
         while (connected) {
             try {
-                String clientInput = fromClient.readLine();
-                // TODO
-                /**
-                 * No computation done; send command to controller which has access to the model
-                 */
+                Message clientInput = (Message) fromClient.readObject();
                 if (clientInput != null) {
-                    String serverOutput = controller.parseInput(clientInput);
-                    toClient.println(serverOutput);
+                    Message serverOutput = controller.parseInput(clientInput);
+                    toClient.writeObject(serverOutput);
                     toClient.flush();
+                    toClient.reset();
                 }
+            } catch (EOFException e) {
+                disconnectClient();
+                //do nothing
             } catch (IOException e) {
                 disconnectClient();
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
         }
