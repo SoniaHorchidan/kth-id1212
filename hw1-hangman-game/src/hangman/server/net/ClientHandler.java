@@ -29,10 +29,13 @@ public class ClientHandler implements Runnable {
         }
         while (connected) {
             try {
-                Message clientInput = (Message) fromClient.readObject();
+                //  Message clientInput = (Message) fromClient.readObject();
+                Message clientInput = Message.receive(fromClient);
+                System.out.println("Received " + clientInput.toString());
                 if (clientInput != null) {
                     Message serverOutput = controller.parseInput(clientInput);
-                    toClient.writeObject(serverOutput);
+                    // toClient.writeObject(serverOutput);
+                    Message.send(serverOutput, toClient);
                     toClient.flush();
                     toClient.reset();
                 }

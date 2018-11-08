@@ -47,7 +47,8 @@ public class ServerConnection {
 
     private void sendMessage(Message msg) {
         try {
-            toServer.writeObject(msg);
+            // toServer.writeObject(msg);
+            Message.send(msg, toServer);
             toServer.flush();
             toServer.reset();
         } catch (IOException e) {
@@ -66,7 +67,9 @@ public class ServerConnection {
         public void run() {
             try {
                 while (true) {
-                    outputHandler.handleMessage((Message) fromServer.readObject());
+                    // outputHandler.handleMessage((Message) fromServer.readObject());
+                    Message msg = Message.receive(fromServer);
+                    outputHandler.handleMessage(msg);
                 }
             } catch (Throwable connectionFailure) {
                 if (connected) {

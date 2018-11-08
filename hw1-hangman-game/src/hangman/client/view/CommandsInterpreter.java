@@ -15,7 +15,6 @@ public class CommandsInterpreter {
     private Controller controller;
     private static final String TOO_MANY_LETTERS = "Please insert only one letter";
     private static final String NO_INPUT_PROVIDED = "Please insert a letter or the whole word";
-
     @FXML
     private AnchorPane startPane;
     @FXML
@@ -40,7 +39,6 @@ public class CommandsInterpreter {
         controller = new Controller();
         UIOutput outputHandler = new UIOutput();
         controller.connect(outputHandler);
-
         messagesText.setVisible(true);
         messagesText.setText("");
     }
