@@ -14,11 +14,8 @@ public class Main extends Application {
         Parent root = loader.load();
         primaryStage.setTitle("The Hangman Game");
         primaryStage.setScene(new Scene(root, 900, 700));
-
-
         CommandsInterpreter controller = loader.getController();
         primaryStage.setOnHidden(e -> controller.shutdown());
-
         primaryStage.show();
     }
 
