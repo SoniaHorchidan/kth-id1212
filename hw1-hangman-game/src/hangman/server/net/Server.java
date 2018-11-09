@@ -23,8 +23,6 @@ public class Server {
 
     public void startClientHandler(Socket clientSocket) throws SocketException {
         clientSocket.setSoLinger(true, LINGER_TIME);
-//        TODO difference??
-//        clientSocket.setSoTimeout(TIMEOUT_HALF_HOUR);
         ClientHandler clientHandler = new ClientHandler(clientSocket);
         Thread clientThread = new Thread(clientHandler);
         clientThread.setPriority(Thread.MAX_PRIORITY);

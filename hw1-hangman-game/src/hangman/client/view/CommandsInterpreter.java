@@ -52,6 +52,7 @@ public class CommandsInterpreter {
 
     @FXML
     private void guessLetter() {
+        clearMessageText();
         String letter = letterProposed.getText();
         if (letter.length() > 1)
             messagesText.setText(TOO_MANY_LETTERS);
@@ -64,6 +65,7 @@ public class CommandsInterpreter {
 
     @FXML
     private void guessWholeWord() {
+        clearMessageText();
         String word = wordProposed.getText();
         if (word.length() == 0)
             messagesText.setText(NO_INPUT_PROVIDED);
@@ -71,6 +73,7 @@ public class CommandsInterpreter {
             controller.guessWord(word);
         clearFields();
     }
+
 
     @FXML
     private void playAgain() {
@@ -95,6 +98,10 @@ public class CommandsInterpreter {
     private void enterToRestart(KeyEvent e) {
         if (e.getCode().toString().equals("ENTER"))
             playAgain();
+    }
+
+    private void clearMessageText() {
+        messagesText.setText("");
     }
 
     private void clearFields() {
