@@ -66,7 +66,6 @@ public class ServerConnection implements Runnable {
             selector = Selector.open();
             socketChannel.register(selector, SelectionKey.OP_CONNECT);
             connected = true;
-
             while (connected) {
                 if (shouldSend) {
                     socketChannel.keyFor(selector).interestOps(SelectionKey.OP_WRITE);

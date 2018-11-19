@@ -21,13 +21,11 @@ public class Server {
             serverChannel.bind(new InetSocketAddress(portNumber));
             serverChannel.register(selector, SelectionKey.OP_ACCEPT);
             System.out.println("Server running...");
-
             while (true) {
                 selector.select();
                 Iterator<SelectionKey> iterator = selector.selectedKeys().iterator();
-                SelectionKey key;
                 while (iterator.hasNext()) {
-                    key = iterator.next();
+                    SelectionKey key = iterator.next();
                     iterator.remove();
                     if (!key.isValid()) {
                         continue;
