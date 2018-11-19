@@ -53,7 +53,7 @@ public class ClientHandler { //implements Runnable{
         byte[] messageContent = readFromBuffer();
         receiveMessagesQueue.add(MessageUtils.deserialize(messageContent));
         // ForkJoinPool.commonPool().execute(this);
-        run();
+        run();                      // run on the same thread
     }
 
     public void sendMessage() throws IOException {
