@@ -4,7 +4,6 @@ import hangman.client.net.OutputHandler;
 import hangman.client.net.ServerConnection;
 
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.util.concurrent.CompletableFuture;
 
 public class Controller {

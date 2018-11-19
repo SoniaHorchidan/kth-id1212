@@ -8,13 +8,14 @@ public class Controller {
     private Game game = new Game();
     private int overAllScore = 0;
 
+    public Message startGame() {
+        game.init();
+        return getUpdatedStatus();
+    }
+
     public Message parseInput(Message clientInput) {
         MessageType messageType = clientInput.getType();
         switch (messageType) {
-            case START: {
-                game.init();
-                break;
-            }
             case WORD: {
                 game.checkWord(clientInput.getWord());
                 break;

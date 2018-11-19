@@ -14,7 +14,7 @@ import java.util.ArrayDeque;
 import java.util.Queue;
 
 
-public class ServerConnection implements Runnable{
+public class ServerConnection implements Runnable {
     private final Queue<Message> sendingQueue = new ArrayDeque<>();
     private final Queue<Message> readingQueue = new ArrayDeque<>();
     private final ByteBuffer serverMessage = ByteBuffer.allocateDirect(4096);
@@ -49,7 +49,7 @@ public class ServerConnection implements Runnable{
         this.socketChannel.keyFor(selector).cancel();
     }
 
-    public void sendMessage(Message message){
+    public void sendMessage(Message message) {
         synchronized (sendingQueue) {
             sendingQueue.add(message);
         }

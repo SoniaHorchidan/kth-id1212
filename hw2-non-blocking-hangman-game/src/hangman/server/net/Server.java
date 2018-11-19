@@ -2,7 +2,10 @@ package hangman.server.net;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.nio.channels.*;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 
 public class Server {
@@ -20,23 +23,23 @@ public class Server {
             System.out.println("Server running...");
 
             while (true) {
-                    selector.select();
-                    Iterator<SelectionKey> iterator = selector.selectedKeys().iterator();
-                    SelectionKey key;
-                    while(iterator.hasNext()) {
-                        key = iterator.next();
-                        iterator.remove();
-                        if (!key.isValid()) {
-                            continue;
-                        }
-                        if (key.isAcceptable()) {
-                            startHandler(key);
-                        } else if (key.isReadable()) {
-                            handleReceivedMessages(key);
-                        } else if (key.isWritable()) {
-                            handleSendingMessages(key);
-                        }
+                selector.select();
+                Iterator<SelectionKey> iterator = selector.selectedKeys().iterator();
+                SelectionKey key;
+                while (iterator.hasNext()) {
+                    key = iterator.next();
+                    iterator.remove();
+                    if (!key.isValid()) {
+                        continue;
                     }
+                    if (key.isAcceptable()) {
+                        startHandler(key);
+                    } else if (key.isReadable()) {
+                        handleReceivedMessages(key);
+                    } else if (key.isWritable()) {
+                        handleSendingMessages(key);
+                    }
+                }
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -54,8 +57,8 @@ public class Server {
     private void handleReceivedMessages(SelectionKey selectionKey) {
         ClientHandler handler = (ClientHandler) selectionKey.attachment();
         try {
-            handler.handleReceivedMessages();
-        } catch(Exception ex) {
+            handler.receiveMessage();
+        } catch (Exception ex) {
             // if any exception is being thrown on receiving, disconnect client
             handler.disconnectClient();
             selectionKey.cancel();
@@ -64,7 +67,7 @@ public class Server {
 
     private void handleSendingMessages(SelectionKey selectionKey) throws IOException {
         ClientHandler clientHandler = (ClientHandler) selectionKey.attachment();
-        clientHandler.handleSendingMessages();
+        clientHandler.sendMessage();
         selectionKey.interestOps(SelectionKey.OP_READ);
     }
 

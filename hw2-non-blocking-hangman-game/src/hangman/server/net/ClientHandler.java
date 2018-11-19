@@ -1,6 +1,7 @@
 package hangman.server.net;
 
 import hangman.common.Message;
+import hangman.common.MessageType;
 import hangman.common.MessageUtils;
 import hangman.server.controller.Controller;
 
@@ -11,7 +12,7 @@ import java.util.Iterator;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class ClientHandler implements Runnable{
+public class ClientHandler { //implements Runnable{
     private final LinkedBlockingQueue<Message> receiveMessagesQueue = new LinkedBlockingQueue<>();
     private final LinkedBlockingQueue<Message> sendMessagesQueue = new LinkedBlockingQueue<>();
     private final ByteBuffer byteBuffer = ByteBuffer.allocateDirect(4096);
@@ -25,29 +26,39 @@ public class ClientHandler implements Runnable{
         controller = new Controller();
     }
 
-    @Override
+    //@Override
     public void run() {
         Iterator<Message> iterator = receiveMessagesQueue.iterator();
         while (iterator.hasNext()) {
             Message inputMessage = iterator.next();
-            Message serverResponse = controller.parseInput(inputMessage);
-            sendResponseToClient(serverResponse);
+            if (inputMessage.getType() == MessageType.START)
+                ForkJoinPool.commonPool().execute(() -> {
+                    // execute time consuming task
+                    Message serverResponse = controller.startGame();
+                    sendResponseToClient(serverResponse);
+                });
+            else {
+                Message serverResponse = controller.parseInput(inputMessage);
+                sendResponseToClient(serverResponse);
+            }
+
             iterator.remove();
         }
     }
 
-    public void handleReceivedMessages() throws IOException, ClassNotFoundException {
+    public void receiveMessage() throws IOException, ClassNotFoundException {
         byteBuffer.clear();
         int numOfReadBytes = clientChannel.read(byteBuffer);
         if (numOfReadBytes == -1) System.out.println("Client disconnected...");
         byte[] messageContent = readFromBuffer();
         receiveMessagesQueue.add(MessageUtils.deserialize(messageContent));
-        ForkJoinPool.commonPool().execute(this);
+        // ForkJoinPool.commonPool().execute(this);
+        run();
     }
 
-    public void handleSendingMessages() throws IOException {
+    public void sendMessage() throws IOException {
         synchronized (sendMessagesQueue) {
-            while (sendMessagesQueue.size() > 0) {
+            while (!sendMessagesQueue.isEmpty()) {
                 Message message = sendMessagesQueue.poll();
                 byte[] messageContent = MessageUtils.serialize(message);
                 ByteBuffer messageToWrite = ByteBuffer.wrap(messageContent);

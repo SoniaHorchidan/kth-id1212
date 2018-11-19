@@ -1,6 +1,6 @@
 package hangman.common;
 
-import java.io.*;
+import java.io.Serializable;
 
 public class Message implements Serializable {
     private MessageType type;
@@ -42,7 +42,7 @@ public class Message implements Serializable {
     public void setScore(int score) {
         this.score = score;
     }
-    
+
 
     @Override
     public String toString() {
