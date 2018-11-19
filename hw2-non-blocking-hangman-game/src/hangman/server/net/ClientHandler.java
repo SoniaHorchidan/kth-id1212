@@ -8,13 +8,14 @@ import hangman.server.controller.Controller;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
+import java.util.ArrayDeque;
 import java.util.Iterator;
+import java.util.Queue;
 import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.LinkedBlockingQueue;
 
 public class ClientHandler { //implements Runnable{
-    private final LinkedBlockingQueue<Message> receiveMessagesQueue = new LinkedBlockingQueue<>();
-    private final LinkedBlockingQueue<Message> sendMessagesQueue = new LinkedBlockingQueue<>();
+    private final Queue<Message> receiveMessagesQueue = new ArrayDeque<>();
+    private final Queue<Message> sendMessagesQueue = new ArrayDeque<>();
     private final ByteBuffer byteBuffer = ByteBuffer.allocateDirect(4096);
     private final SocketChannel clientChannel;
     private final Server server;
