@@ -71,6 +71,4 @@ public class CommandsInterpreter {
     public boolean checkIdentity(String username) {
         return username.equals(user.getUsername());
     }
-
-
 }
