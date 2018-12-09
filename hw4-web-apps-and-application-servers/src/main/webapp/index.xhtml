@@ -1,0 +1,76 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>Adder Site</title>
+</h:head>
+<h:body>
+    <h1>Currency Converter</h1>
+
+    <h3>Choose currencies</h3>
+    <h:form>
+        <p>
+            <h:outputLabel for="from" value="From currency: "/>
+            <h:selectOneMenu id="from" value="${converterManager.fromCurrency}">
+                <f:selectItems value="${converterManager.currencies}"
+                               var="currency"
+                               itemLabel="#{currency.name}"
+                               itemValue="#{currency.id}"/>
+            </h:selectOneMenu>
+        </p>
+        <p>
+            <h:outputLabel for="to" value="To currency: "/>
+            <h:selectOneMenu id="to" value="${converterManager.toCurrency}">
+                <f:selectItems value="${converterManager.currencies}"
+                               var="currency"
+                               itemLabel="#{currency.name}"
+                               itemValue="#{currency.id}"/>
+            </h:selectOneMenu>
+        </p>
+        <p>
+            <h:inputText id="value" value="#{converterManager.valueToConvert}"/>
+        </p>
+
+        <p>
+            <h:commandButton value="Search" action="#{converterManager.convert}"/>
+        </p>
+        <p>
+            <h:outputLabel for="result" value="Result: "/>
+            <h:outputText id="result" value="#{converterManager.result}"/>
+        </p>
+    </h:form>
+
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+
+    <h1>Administrator interface</h1>
+
+    <h3>Add new currencies</h3>
+    <h:form>
+        <p>
+            <h:outputLabel for="fromCurrency" value="From new currency: "/>
+            <h:inputText id="fromCurrency" value="#{converterManager.fromNewCurrency}"/>
+        </p>
+        <p>
+            <h:outputLabel for="toCurrency" value="To new currency: "/>
+            <h:inputText id="toCurrency" value="#{converterManager.toNewCurrency}"/>
+        </p>
+        <p>
+            <h:outputLabel for="rate" value="Conversion rate: "/>
+            <h:inputText id="rate" value="#{converterManager.newRate}"/>
+        </p>
+        <p>
+            <h:commandButton value="Add new currency" action="#{converterManager.add}"/>
+        </p>
+
+        <p>
+            <h:outputLabel for="count" value="Number of conversions performed so far: "/>
+            <h:outputText id="count" value="#{converterManager.counter}"/>
+        </p>
+
+    </h:form>
+</h:body>
+</html>
+

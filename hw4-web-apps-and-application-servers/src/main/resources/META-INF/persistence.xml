@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1"
+             xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+    <persistence-unit name="bankPU" transaction-type="JTA">
+        <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+        <jta-data-source>jdbc/mybank</jta-data-source>
+        <class>model.ConverterEntity</class>
+        <class>model.CurrencyEntity</class>
+        <class>model.CounterEntity</class>
+        <exclude-unlisted-classes>false</exclude-unlisted-classes>
+        <properties>
+            <property name="javax.persistence.schema-generation.database.action" value="none"/>
+            <property name="eclipselink.logging.level" value="FINE"/>
+            <property name="eclipselink.jdbc.url" value="jdbc:derby://localhost:1527/mybank"/>
+            <property name="eclipselink.jdbc.driver" value="org.apache.derby.jdbc.ClientDriver"/>
+        </properties>
+    </persistence-unit>
+</persistence>

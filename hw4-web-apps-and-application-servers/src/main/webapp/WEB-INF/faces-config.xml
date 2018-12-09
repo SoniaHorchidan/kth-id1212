@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!-- =========== FULL CONFIGURATION FILE ================================== -->
+
+<faces-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              version="2.0"
+              xmlns="http://java.sun.com/xml/ns/javaee"
+              xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
+    <navigation-rule>
+        <from-view-id>/index.xhtml</from-view-id>
+        <navigation-case>
+            <if>#{!converterManager.success}</if>
+            <to-view-id>/errorConverter.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+</faces-config>
