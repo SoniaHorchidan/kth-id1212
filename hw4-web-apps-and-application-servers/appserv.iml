@@ -16,7 +16,7 @@
         <setting name="validation-enabled" value="true" />
         <setting name="provider-name" value="" />
         <datasource-mapping>
-          <factory-entry name="bankPU" value="73f2a7a8-9306-4513-9155-b33041e5c91d" />
+          <factory-entry name="converterPU" value="73f2a7a8-9306-4513-9155-b33041e5c91d" />
         </datasource-mapping>
         <deploymentDescriptor name="persistence.xml" url="file://$MODULE_DIR$/src/main/resources/META-INF/persistence.xml" />
       </configuration>

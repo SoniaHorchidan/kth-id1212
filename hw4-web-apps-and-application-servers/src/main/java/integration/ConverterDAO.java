@@ -15,7 +15,7 @@ import java.util.List;
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
 @Stateless
 public class ConverterDAO {
-    @PersistenceContext(unitName = "bankPU")
+    @PersistenceContext(unitName = "converterPU")
     private EntityManager entityManager;
 
     public List<CurrencyEntity> getAllCurrencies() {
