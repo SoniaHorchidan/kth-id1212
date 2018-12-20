@@ -1,5 +1,5 @@
 # kth-id1212
-Network Programming course (ID1212) at Royal Institute of Technology KTH
+<h3>Network Programming course (ID1212) at Royal Institute of Technology KTH</h3>
 
 <b>Homework1</b> - a client-server distributed application which allows the clients to play the "Hangman" word-guessing game, using TCP <i>blocking</i> sockets in Java.
   
