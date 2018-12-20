@@ -1,4 +1,4 @@
-package com.example.android.myapplication.net;
+package com.example.android.myapplication.services;
 
 import com.example.android.myapplication.common.Message;
 

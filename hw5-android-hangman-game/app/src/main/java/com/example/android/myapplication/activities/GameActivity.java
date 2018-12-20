@@ -1,4 +1,4 @@
-package com.example.android.myapplication.view;
+package com.example.android.myapplication.activities;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,8 +11,8 @@ import android.widget.TextView;
 import com.example.android.myapplication.R;
 import com.example.android.myapplication.common.Message;
 import com.example.android.myapplication.common.MessageType;
-import com.example.android.myapplication.net.OutputHandler;
-import com.example.android.myapplication.net.ServerConnection;
+import com.example.android.myapplication.services.OutputHandler;
+import com.example.android.myapplication.services.ServerConnection;
 
 import java.io.IOException;
 
