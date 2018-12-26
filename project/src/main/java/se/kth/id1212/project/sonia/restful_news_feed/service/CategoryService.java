@@ -5,7 +5,10 @@ import org.springframework.stereotype.Service;
 import se.kth.id1212.project.sonia.restful_news_feed.entity.Category;
 import se.kth.id1212.project.sonia.restful_news_feed.repository.CategoryRepository;
 
+import javax.transaction.Transactional;
+
 @Service
+@Transactional
 public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;

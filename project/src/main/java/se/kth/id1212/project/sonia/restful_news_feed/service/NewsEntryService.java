@@ -9,6 +9,7 @@ import se.kth.id1212.project.sonia.restful_news_feed.repository.NewsEntryReposit
 import javax.transaction.Transactional;
 
 @Service
+@Transactional
 public class NewsEntryService {
     @Autowired
     private NewsEntryRepository newsEntryRepository;
@@ -21,7 +22,6 @@ public class NewsEntryService {
         return newsEntryRepository.findOne(id);
     }
 
-    @Transactional
     public void saveEntry(NewsEntry newsEntry) {
         newsEntryRepository.save(newsEntry);
     }
@@ -30,8 +30,7 @@ public class NewsEntryService {
         return newsEntryRepository.getAllUsersFavourites(loggedInUser);
     }
 
-    @Transactional
-    public void deleteEntry(long id){
+    public void deleteEntry(long id) {
         newsEntryRepository.delete(id);
     }
 

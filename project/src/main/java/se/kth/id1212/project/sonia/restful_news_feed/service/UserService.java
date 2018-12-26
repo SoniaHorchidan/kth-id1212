@@ -8,21 +8,21 @@ import se.kth.id1212.project.sonia.restful_news_feed.repository.UserRepository;
 import javax.transaction.Transactional;
 
 @Service
+@Transactional
 public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    @Transactional
     public void saveUser(User user) throws ServiceError {
         boolean usernameExists = userRepository.existsByName(user.getName());
-        if(usernameExists)
+        if (usernameExists)
             throw new ServiceError();
         userRepository.save(user);
     }
 
     public User login(User user) throws Exception {
         User foundUser = userRepository.getUserByNameAndPassword(user.getName(), user.getPassword());
-        if(foundUser == null)
+        if (foundUser == null)
             throw new ServiceError();
         return foundUser;
     }
