@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Add new entry</title>
+    <link href="/static/bootstrap_files/bootstrap.css" rel="stylesheet" media="screen"
+          th:href="@{/bootstrap_files/bootstrap.css}"/>
+    <link href="/static/bootstrap_files/bootstrap.min.css" rel="stylesheet" media="screen"
+          th:href="@{/bootstrap_files/bootstrap.min.css}"/>
+    <link href="/static/bootstrap_files/starter-template.css" rel="stylesheet" media="screen"
+          th:href="@{/bootstrap_files/starter-template.css}"/>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="index.html">NewsFeed</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+            aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+            <a class="nav-link" href="news-feed.html">Feed</a>
+        </li>
+    </ul>
+</nav>
+
+<div class="container" style="text-align: center">
+    <div>
+        <h1>Insert new entry</h1>
+        <br/>
+        <br/>
+        <br/>
+        <form action="#" th:action="@{/insert}" th:object="${newsEntry}" method="post">
+            <div>
+                <label for="title">Title</label>
+                <div>
+                    <input type="text" th:field="*{title}" id="title" placeholder="Title"/>
+                    <!--<span th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>-->
+                </div>
+            </div>
+
+            <br/>
+            <div>
+                <label for="content">Content</label><br/>
+                <div>
+                    <textarea type="text" th:field="*{content}" id="content" placeholder="Content" rows="6"
+                              cols="40"></textarea>
+                    <!--<span th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></span>-->
+                </div>
+            </div>
+            <br/>
+            <div>
+                <label for="writePerm">Write permission:</label>
+                <input type="checkbox" th:field="*{writePermission}" id="writePerm"/>
+            </div>
+            <br/>
+            <div>
+                <label for="categ">Category:</label>
+                <div id="categ">
+                    <th:block th:each="category : ${categoryList}">
+                        <input type="radio" name="categs" th:value="${category.id}"/>
+                        <label th:text="${category.name}"></label> <br/>
+                    </th:block>
+                </div>
+            </div>
+            <br/>
+            <div>
+                <input type="submit" value="Insert News Entry" class="btn-dark" style="padding: 10px"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+</body>
+</html>

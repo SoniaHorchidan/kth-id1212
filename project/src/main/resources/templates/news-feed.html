@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <link href="/static/bootstrap_files/bootstrap.css" rel="stylesheet" media="screen"
+          th:href="@{/bootstrap_files/bootstrap.css}"/>
+    <link href="/static/bootstrap_files/bootstrap.min.css" rel="stylesheet" media="screen"
+          th:href="@{/bootstrap_files/bootstrap.min.css}"/>
+    <link href="/static/bootstrap_files/starter-template.css" rel="stylesheet" media="screen"
+          th:href="@{/bootstrap_files/starter-template.css}"/>
+
+</head>
+<body>
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="#">NewsFeed</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+            aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+            <li class="navbar-text">
+                Logged in as: <span th:text="${username}"></span>
+            </li>
+            <li class="navbar-text">
+                Chosen categories: <span th:text="${favCategories}"></span>
+            </li>
+            <li class="nav-item" style="margin-top: 5px">
+                <a class="nav-link" href="/insert">Add new entry</a>
+            </li>
+
+            <li class="nav-item" style="margin-top: 5px">
+                <a class="nav-link" href="/logout">Logout</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div th:switch="${entries}" class="container">
+    <h2 th:case="null">No news entries yet!</h2>
+    <div th:case="*">
+        <h1>News Entries</h1>
+        <div th:each="entry : ${entries}" style="padding: 30px; border: 2px solid #1b1e21; margin-bottom: 10px">
+            <h3 th:text="${entry.title}"></h3>
+            <div>
+                Owned by: <span th:text="${entry.owner.name}"></span>
+            </div>
+            <div>
+                Category: <span th:text="${entry.category}"></span>
+            </div>
+            <div>
+                Last updated by: <span th:text="${entry.lastUpdatedBy.name}"></span>
+            </div>
+            <div th:switch="${entry.writePermission}">
+                <div th:case="true">
+                    <br/>
+                    <br/>
+                    <br/>
+                    <div>
+                        <a th:href="@{/edit/{id}(id=${entry.id})}" class="btn-dark" style="padding: 10px; ">Edit</a>
+                        <a th:href="@{/delete/{id}(id=${entry.id})}" class="btn-dark" style="padding: 10px">Delete</a>
+                    </div>
+                    <br/>
+                </div>
+            </div>
+            <div>
+                <h4>Content</h4>
+                <div th:text="${entry.content}" class="container"
+                     style="border: 1px solid #2e3133; padding: 15px; width: 90%"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <br/>
+    <br/>
+
+    <div th:switch="${myEntries}" class="container">
+        <h2 th:case="null">No news entries yet!</h2>
+        <div th:case="*">
+            <h1>Your Entries</h1>
+            <div th:each="entry : ${myEntries}" style="padding: 30px; border: 2px solid #1b1e21; margin-bottom: 10px">
+                <h3 th:text="${entry.title}"></h3>
+                <div>
+                    Owned by: <span th:text="${entry.owner.name}"></span>
+                </div>
+                <div>
+                    Category: <span th:text="${entry.category}"></span>
+                </div>
+                <div>
+                    Last updated by: <span th:text="${entry.lastUpdatedBy.name}"></span>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <div>
+                        <a th:href="@{/edit/{id}(id=${entry.id})}" class="btn-dark" style="padding: 10px;">Edit</a>
+                        <a th:href="@{/delete/{id}(id=${entry.id})}" class="btn-dark" style="padding: 10px">Delete</a>
+                    </div>
+                    <br/>
+
+                    <div>
+                        <h4>Content</h4>
+                        <div th:text="${entry.content}" class="container"
+                             style="border: 1px solid #2e3133; padding: 15px; width: 90%"></div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>
