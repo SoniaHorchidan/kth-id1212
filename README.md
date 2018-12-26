@@ -10,3 +10,5 @@
 <b>Homework4</b> - a three-tier web-based application for online currency conversion, using <i>JSF</i>, <i>EJB</i> and <i>JPA</i>.
 
 <b>Homework5</b> - a distributed application which allows the clients to play the "Hangman" word-guessing game, using the <i>Android SDK</i>
+
+<b>Final project</b> - a web application which allows users to create, update or delete news entries and to subscribe to certain topics of interest, using <i>RESTful web services</i>.
