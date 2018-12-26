@@ -36,7 +36,8 @@
                 <label for="title">Title</label>
                 <div>
                     <input type="text" th:field="*{title}" id="title" placeholder="Title"/>
-                    <!--<span th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>-->
+                    <br/>
+                    <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}" style="color: red"></span>
                 </div>
             </div>
 
@@ -46,7 +47,19 @@
                 <div>
                     <textarea type="text" th:field="*{content}" id="content" placeholder="Content" rows="5"
                               cols="40"></textarea>
-                    <!--<span th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></span>-->
+                    <br/>
+                    <span th:if="${#fields.hasErrors('content')}" th:errors="*{content}" style="color: red"></span>
+                </div>
+            </div>
+            <div>
+                <label for="categ">Category:</label>
+                <div id="categ">
+                    <th:block th:each="category : ${categoryList}">
+                        <input type="radio" th:field="*{category}" th:value="${category.id}"/>
+                        <label th:text="${category.name}"></label> <br/>
+                    </th:block>
+                    <br/>
+                    <span th:if="${#fields.hasErrors('category')}" th:errors="*{category}" style="color: red"></span>
                 </div>
             </div>
             <br/>

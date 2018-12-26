@@ -9,6 +9,8 @@ public abstract class CustomException extends RuntimeException {
         super(message);
     }
 
+    public CustomException(){ super(); }
+
     public HttpStatus getStatus() {
         return status;
     }

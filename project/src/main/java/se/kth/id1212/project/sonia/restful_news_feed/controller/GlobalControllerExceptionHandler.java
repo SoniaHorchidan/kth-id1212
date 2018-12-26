@@ -10,7 +10,9 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import se.kth.id1212.project.sonia.restful_news_feed.controller.exceptions.*;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
 @ControllerAdvice
 public class GlobalControllerExceptionHandler {
@@ -31,15 +33,6 @@ public class GlobalControllerExceptionHandler {
     /**
      * handlers for default exceptions
      */
-    @ExceptionHandler({MissingServletRequestParameterException.class, BindException.class})
-    public ModelAndView handleMissingInput(HttpServletRequest req, Exception ex){
-        ModelAndView model = new ModelAndView();
-        model.addObject("errorMessage", "Some fields are missing. Please enter the requested information.");
-        model.setViewName("error");
-        model.setStatus(HttpStatus.BAD_REQUEST);
-        return model;
-    }
-
     @ExceptionHandler({HttpRequestMethodNotSupportedException.class})
     public ModelAndView handleUnsupportedHttpRequests(HttpServletRequest req, Exception ex){
         ModelAndView model = new ModelAndView();
@@ -50,12 +43,21 @@ public class GlobalControllerExceptionHandler {
     }
 
     /**
-     * handler for unknown errors
+     * handler for unknown errors; throw and handle custom errors, based on what operation was being performed by the
+     * user at the moment
      */
-    @ExceptionHandler(NoHandlerFoundException.class)
-    public ModelAndView handleUnknownErrors(HttpServletRequest request, Exception exception)   {
+    @ExceptionHandler(Exception.class)
+    public ModelAndView handleUnknownErrors(HttpServletRequest request, Exception exception) {
+        String requestURI = request.getRequestURI();
+        if(requestURI.contains("edit"))
+            return handle(request, new UpdateFailedException());
+        if(requestURI.contains("insert"))
+            return handle(request, new InsertFailedException());
+        if(requestURI.contains("delete"))
+            return handle(request, new DeleteFailedException());
+
         ModelAndView model = new ModelAndView();
-        model.addObject("errorMessage", "Internal server error.");
+        model.addObject("errorMessage", "Internal server error. Operation was not performed.");
         model.setViewName("error");
         model.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
         return model;

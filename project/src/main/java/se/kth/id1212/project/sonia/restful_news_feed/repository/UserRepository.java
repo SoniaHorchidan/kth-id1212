@@ -1,6 +1,7 @@
 package se.kth.id1212.project.sonia.restful_news_feed.repository;
 
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.transaction.annotation.Transactional;
 import se.kth.id1212.project.sonia.restful_news_feed.entity.User;
 
 public interface UserRepository extends CrudRepository<User, Long> {

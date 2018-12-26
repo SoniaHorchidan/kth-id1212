@@ -66,7 +66,7 @@ public class NewsFeedApplicationTests {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("name", "user3")
                 .param("password", "pass")
-                .param("categs", "1", "2"))
+                .param("preferredCategories", "1", "2"))
                 .andExpect(status().isCreated());
 
         User newUser = userService.getUserByName("user3");
@@ -79,7 +79,7 @@ public class NewsFeedApplicationTests {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("name", "user1")
                 .param("password", "pass")
-                .param("categs", "1", "2"))
+                .param("preferredCategories", "1", "2"))
                 .andExpect(status().isConflict());
     }
 
@@ -87,9 +87,10 @@ public class NewsFeedApplicationTests {
     public void invalidRegistrationBecauseOfMissingFields() throws Exception {
         this.mvc.perform(post("/register")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("name", "user4")
-                .param("password", "pass"))
-                .andExpect(status().isBadRequest());
+                .param("name", "user4"));
+
+        User newUser = userService.getUserByName("user4");
+        assertNull(newUser);
     }
 
 
@@ -100,23 +101,26 @@ public class NewsFeedApplicationTests {
                 .sessionAttr("userId", 1l)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("title", "My news entry")
-                .param("content", "The content of the entry"))
+                .param("content", "The content of the entry")
+                .param("category", "1"))
                 .andExpect(status().isOk());
 
         NewsEntry newsEntry = newsEntryService.findEntryById(1);
+
         assertEquals("My news entry", newsEntry.getTitle());
         assertEquals("The content of the entry", newsEntry.getContent());
     }
 
     @Test
     public void editUnsuccessfullyBecauseOfMissingFields() throws Exception {
-	    // TODO change expected status
         this.mvc.perform(post("/edit/1")
                 .sessionAttr("username", "user1")
                 .sessionAttr("userId", 1l)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("content", "My new news entry"))
-                .andExpect(status().isServiceUnavailable());
+                .param("content", "Changed title"));
+
+        NewsEntry newsEntry = newsEntryService.findEntryById(1);
+        assertTrue(!newsEntry.getTitle().equals("Changed title"));
     }
 
     @Test
@@ -130,7 +134,7 @@ public class NewsFeedApplicationTests {
                 .param("title", "New entry")
                 .param("content", "The content of the entry")
                 .param("writePermission", "true")
-                .param("categs", "2"))
+                .param("category", "2"))
                 .andExpect(status().isCreated());
 
         int finalNumOfEntries = ((ArrayList<NewsEntry>) newsEntryService.findAll()).size();
@@ -147,8 +151,7 @@ public class NewsFeedApplicationTests {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("title", "New entry")
                 .param("content", "The content of the entry")
-                .param("writePermission", "true"))
-                .andExpect(status().isBadRequest());
+                .param("writePermission", "true"));
 
         int finalNumOfEntries = ((ArrayList<NewsEntry>) newsEntryService.findAll()).size();
         assertEquals(initialNumOfEntries, finalNumOfEntries);

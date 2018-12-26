@@ -1,6 +1,9 @@
 package se.kth.id1212.project.sonia.restful_news_feed.entity;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,9 +14,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Column(unique=true)
+    @Column(unique = true)
+    @NotBlank(message = "Username is mandatory")
     private String name;
 
+    @NotBlank(message = "Password is mandatory")
     private String password;
 
     @OneToMany(mappedBy="owner")

@@ -15,6 +15,7 @@ import se.kth.id1212.project.sonia.restful_news_feed.service.NewsEntryService;
 import se.kth.id1212.project.sonia.restful_news_feed.service.ServiceError;
 import se.kth.id1212.project.sonia.restful_news_feed.service.UserService;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.ArrayList;
 
@@ -48,18 +49,6 @@ public class IndexController {
             return redirectTo("news-feed", model);
         else
             return redirectTo("index", model);
-    }
-
-    private String redirectTo(String page, Model model) {
-        if (page.equals("news-feed")) {
-            User user = getLoggedInUserFromModel(model);
-            //model.addAttribute("loggedInUser", userId);
-            model.addAttribute("entries", newsEntryService.listUsersFavouriteEntries(user));
-            model.addAttribute("myEntries", newsEntryService.listUsersEntries(user));
-            model.addAttribute("favCategories", user.getPreferredCategories());
-        } else
-            model.addAttribute("entries", newsEntryService.listAllEntries());
-        return page;
     }
 
     @GetMapping("/login")
@@ -96,15 +85,11 @@ public class IndexController {
 
     @PostMapping("/register")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public String registerUser(@Valid User user, @RequestParam(value = "categs") long[] categories,
-                               BindingResult result, Model model) {
-
-        ArrayList<Category> preferredCategories = new ArrayList<>();
-        for (long categId : categories) {
-            Category category = categoryService.findCategoryById(categId);
-            preferredCategories.add(category);
+    public String registerUser(@Valid User user, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("categoryList", categoryService.listCategories());
+            return "register";
         }
-        user.setPreferredCategories(preferredCategories);
         try {
             userService.saveUser(user);
         } catch (ServiceError serviceError) {
@@ -122,29 +107,31 @@ public class IndexController {
             throw new ResourceNotFoundException();
 
         model.addAttribute("newsEntry", newsEntry);
+        model.addAttribute("categoryList", categoryService.listCategories());
         return "update-entry";
     }
 
     @PostMapping("/edit/{id}")
     @ResponseStatus(value = HttpStatus.OK)
-    public String updateEntry(@PathVariable("id") long id, @Valid NewsEntry newsEntry,
-                              BindingResult result, Model model) {
-        if (!userIsLoggedIn(model))
-            return redirectTo("index", model);
-//        if (result.hasErrors()) {
-//            newsEntry.setId(id);
-//            return "update-entry";
-//        }
+    public String updateEntry(@PathVariable("id") long id, @Valid NewsEntry newsEntry, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            newsEntry.setId(id);
+            model.addAttribute("categoryList", categoryService.listCategories());
+            return "update-entry";
+        }
         User loggedInUser = getLoggedInUserFromModel(model);
         NewsEntry originalNewsEntry = newsEntryService.findEntryById(id);
         newsEntry.setOwner(originalNewsEntry.getOwner());
         newsEntry.setWritePermission(originalNewsEntry.isWritePermission());
-        newsEntry.setCategory(originalNewsEntry.getCategory());
         newsEntry.setLastUpdatedBy(loggedInUser);
+
+        // test server error
+        // System.out.println(10/0);
+
         try{
             newsEntryService.saveEntry(newsEntry);
         } catch (Exception ex) {
-            throw new UpdateFailedException();
+            throw new TransactionFailedException();
         }
 
         return redirectTo("news-feed", model);
@@ -160,20 +147,20 @@ public class IndexController {
 
     @PostMapping("/insert")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public String insertEntry(@Valid NewsEntry newsEntry, @RequestParam(value = "categs") long categId,
-                              BindingResult result, Model model) {
-//        if (result.hasErrors()) {
-//            return "insert-entry";
-//        }
+    public String insertEntry(@Valid NewsEntry newsEntry, BindingResult result,
+                              Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("categoryList", categoryService.listCategories());
+            return "insert-entry";
+        }
         User loggedInUser = getLoggedInUserFromModel(model);
-        Category category = categoryService.findCategoryById(categId);
-        newsEntry.setCategory(category);
         newsEntry.setOwner(loggedInUser);
         newsEntry.setLastUpdatedBy(loggedInUser);
+
         try{
             newsEntryService.saveEntry(newsEntry);
         } catch (Exception ex){
-            throw new InsertFailedException();
+            throw new TransactionFailedException();
         }
 
         return redirectTo("news-feed", model);
@@ -190,16 +177,28 @@ public class IndexController {
         try{
             newsEntryService.deleteEntry(id);
         } catch(Exception ex){
-            throw new DeleteFailedException();
+            throw new TransactionFailedException();
         }
 
         model.addAttribute("users", newsEntryService.listAllEntries());
         return redirectTo("news-feed", model);
     }
 
-    @RequestMapping(value = {"{path:(?!resources|static).*$}", "{path:(?!resources|static)*$}/**"}, headers = "Accept=text/html")
+    @RequestMapping(value = {"{path:(?!resources|static).*$}", "{path:(?!resources|static)*$}/**"},
+            headers = "Accept=text/html")
     public void matchUnknownPaths() {
         throw new ResourceNotFoundException();
+    }
+
+    private String redirectTo(String page, Model model) {
+        if (page.equals("news-feed")) {
+            User user = getLoggedInUserFromModel(model);
+            model.addAttribute("entries", newsEntryService.listUsersFavouriteEntries(user));
+            model.addAttribute("myEntries", newsEntryService.listUsersEntries(user));
+            model.addAttribute("favCategories", user.getPreferredCategories());
+        } else
+            model.addAttribute("entries", newsEntryService.listAllEntries());
+        return page;
     }
 
     private User getLoggedInUserFromModel(Model model) {

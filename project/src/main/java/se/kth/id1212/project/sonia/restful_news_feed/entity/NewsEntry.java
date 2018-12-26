@@ -3,6 +3,7 @@ package se.kth.id1212.project.sonia.restful_news_feed.entity;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class NewsEntry {
@@ -28,6 +29,7 @@ public class NewsEntry {
 
     @OneToOne
     @JoinColumn(name="category_id")
+    @NotNull(message = "Category is required")
     private Category category;
 
     public NewsEntry(User owner, String title, String content, boolean writePermission, Category category) {
@@ -95,5 +97,18 @@ public class NewsEntry {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    @Override
+    public String toString() {
+        return "NewsEntry{" +
+                "id=" + id +
+                ", owner=" + owner +
+                ", content='" + content + '\'' +
+                ", title='" + title + '\'' +
+                ", writePermission=" + writePermission +
+                ", lastUpdatedBy=" + lastUpdatedBy +
+                ", category=" + category +
+                '}';
     }
 }
