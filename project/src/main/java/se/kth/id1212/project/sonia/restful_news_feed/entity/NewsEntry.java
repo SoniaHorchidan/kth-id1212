@@ -15,7 +15,7 @@ public class NewsEntry {
     @JoinColumn(name="OWNER_ID")
     private User owner;
 
-    @NotBlank(message = "Content is mandatory")       //TODO
+    @NotBlank(message = "Content is mandatory")
     private String content;
 
     @NotBlank(message = "Title is mandatory")
